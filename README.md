@@ -194,7 +194,7 @@ git clone https://github.com/mBuergi86/my_wezterm.git ~/.config/wezterm
 
 ## License
 
-This configuration is licensed under the GNU General Public License v3.0. You are free to use, modify, and distribute this configuration under the terms of this license.
+This configuration is licensed under the General Public License v3.0. You are free to use, modify, and distribute this configuration under the terms of this license.
 
 ## Acknowledgments
 
