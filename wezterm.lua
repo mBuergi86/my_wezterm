@@ -7,6 +7,54 @@ local config = {}
 local mouse_bindings = {}
 local launch_menu = {}
 
+<<<<<<< HEAD
+=======
+-- Icon mappings for processes and directories
+local icon_mappings = {
+	processes = {
+		nvim = wezterm.nerdfonts.custom_neovim,
+		zsh = wezterm.nerdfonts.cod_terminal,
+		bash = wezterm.nerdfonts.cod_terminal_bash,
+		git = wezterm.nerdfonts.fa_git,
+	},
+	extensions = {
+		[".lua"] = wezterm.nerdfonts.md_language_lua,
+		[".svelte"] = wezterm.nerdfonts.seti_svelte,
+		[".js"] = wezterm.nerdfonts.dev_javascript,
+		[".rb"] = wezterm.nerdfonts.dev_ruby,
+		[".go"] = wezterm.nerdfonts.custom_go,
+		[".py"] = wezterm.nerdfonts.dev_python,
+		[".ts"] = wezterm.nerdfonts.dev_typescript,
+		[".html"] = wezterm.nerdfonts.dev_html5,
+		[".css"] = wezterm.nerdfonts.dev_css3,
+	},
+	directories = {
+		Documents = wezterm.nerdfonts.fa_folder_open,
+		Projects = wezterm.nerdfonts.dev_code,
+		Downloads = wezterm.nerdfonts.fa_download,
+		Music = wezterm.nerdfonts.fa_music,
+		Pictures = wezterm.nerdfonts.fa_image,
+		Videos = wezterm.nerdfonts.fa_video,
+		OneDrive = wezterm.nerdfonts.dev_onedrive,
+	},
+	default_icon = wezterm.nerdfonts.cod_file,
+}
+
+-- Function to dynamically set icons in tab titles
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local title = tab.active_pane.title
+	local process_name = tab.active_pane.foreground_process_name
+
+	-- Check if there's an icon for the process
+	for proc, icon in pairs(icon_mappings.processes) do
+		if process_name and process_name:find(proc) then
+			title = icon .. " " .. title
+			return title
+		end
+	end
+end)
+
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 -- Uncomment this block if you want to display a status bar with date, time, and battery info.
 -- The status bar is set to display on the right side of the terminal window.
 -- wezterm.on("update-right-status", function(window, pane)
@@ -37,31 +85,136 @@ end
 config.launch_menu = launch_menu
 
 -- Disable the tab bar as it’s not needed; setting it at the bottom if enabled
+<<<<<<< HEAD
 config.enable_tab_bar = false
 config.tab_bar_at_bottom = false
 
+=======
+config.enable_tab_bar = true
+config.tab_bar_at_bottom = false
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	-- Get the current working directory of the active pane
+	local cwd_uri = tab.active_pane.current_working_dir
+	local cwd = ""
+
+	-- Convert the URI to a more readable path, if available
+	if cwd_uri then
+		local home = os.getenv("HOME")
+		cwd = cwd_uri:match("file://[^/]*(/.*)")
+		if home and cwd == home then
+			cwd = "~"
+		elseif home and cwd:find(home, 1, true) == 1 then
+			cwd = "~" .. cwd:sub(#home + 1)
+		end
+	end
+
+	local title = " " .. cwd .. " "
+
+	if tab.is_active then
+		return {
+			{ Background = { Color = "#7aa2f7" } },
+			{ Foreground = { Color = "#24283b" } },
+			{ Foreground = { Color = "#1a1b26" } },
+			{ Text = title },
+			{ Foreground = { Color = "#24283b" } },
+		}
+	else
+		return {
+			{ Background = { Color = "#1a1b26" } },
+			{ Foreground = { Color = "#24283b" } },
+			{ Foreground = { Color = "#a9b1d6" } },
+			{ Text = title },
+			{ Foreground = { Color = "#24283b" } },
+		}
+	end
+end)
+
+-- Tokyo Night Storm colors with custom styling for tabs
+config.colors = {
+	tab_bar = {
+		background = "#24283b",
+
+		-- Active tab styling
+		active_tab = {
+			bg_color = "#7aa2f7",
+			fg_color = "#1a1b26",
+			intensity = "Bold",
+		},
+
+		-- Inactive tab styling
+		inactive_tab = {
+			bg_color = "#1a1b26",
+			fg_color = "#a9b1d6",
+		},
+
+		-- Hover effect for inactive tabs
+		inactive_tab_hover = {
+			bg_color = "#3b4261",
+			fg_color = "#c0caf5",
+			italic = true,
+		},
+
+		-- New tab styling
+		new_tab = {
+			bg_color = "#24283b",
+			fg_color = "#7aa2f7",
+		},
+
+		-- New tab hover styling
+		new_tab_hover = {
+			bg_color = "#7aa2f7",
+			fg_color = "#1a1b26",
+			underline = "Single",
+		},
+	},
+}
+
+config.window_padding = {
+	left = 1,
+	right = 1,
+	top = 0,
+	bottom = 0,
+}
+
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 -- Function to get the current system appearance (e.g., Dark or Light mode)
 local function get_appearance()
 	if gui then
 		return gui.get_appearance()
 	end
+<<<<<<< HEAD
 	return "Dark"  -- Default to Dark if GUI isn't available
+=======
+	return "Dark" -- Default to Dark if GUI isn't available
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 end
 
 -- Select a color scheme based on the system appearance
 local function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
+<<<<<<< HEAD
 		return "Catppuccin Mocha"
 	else
 		return "Catppuccin Latte"
+=======
+		return "tokyonight_storm"
+	else
+		return "tokyonight_night"
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 	end
 end
 
 -- Customize various settings for a better appearance and readability
 config.line_height = 1.2
 config.font = wezterm.font_with_fallback({
+<<<<<<< HEAD
 	{ family = "CaskaydiaCove Nerd Font", scale = 1.4, weight = "Medium" },  -- Main font with medium weight
 	{ family = "FiraCode Nerd Font", scale = 1.4 },  -- Fallback font
+=======
+	{ family = "CaskaydiaCove Nerd Font", scale = 1.2, weight = "Medium" }, -- Main font with medium weight
+	{ family = "FiraCode Nerd Font", scale = 1.2 }, -- Fallback font
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 })
 config.color_scheme = scheme_for_appearance(get_appearance())
 
@@ -75,7 +228,11 @@ config.color_scheme = scheme_for_appearance(get_appearance())
 
 -- Set the cursor style and window opacity
 config.default_cursor_style = "BlinkingBar"
+<<<<<<< HEAD
 config.window_background_opacity = 0.6
+=======
+config.window_background_opacity = 0.9
+>>>>>>> 7fcd62c (fix(wezterm): 🔧 improve customization for better appearance)
 
 -- Set window decorations and behavior
 config.window_decorations = "RESIZE"
